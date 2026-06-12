@@ -9,7 +9,7 @@ class ActorManager:
         self.table_name = table_name
         self.connection = sqlite3.connect(self.db_name)
 
-    def create_actor(self, first_name: str, last_name: str) -> None:
+    def create(self, first_name: str, last_name: str) -> None:
         self.connection.execute(
             f"INSERT INTO  {self.table_name}"
             f" (first_name, last_name) Values (?, ?)",
@@ -29,7 +29,7 @@ class ActorManager:
         self.connection.execute(
             f"UPDATE {self.table_name} "
             f"SET first_name=?, last_name=? "
-            f"Where pk=?",
+            f"Where id=?",
             (new_first_name, new_last_name, pk)
         )
         self.connection.commit()
@@ -37,7 +37,10 @@ class ActorManager:
     def delete(self, pk: int) -> None:
         self.connection.execute(
             f"DELETE FROM {self.table_name} "
-            f"WHERE pk=?",
+            f"WHERE id=?",
             (pk,)
         )
         self.connection.commit()
+
+    def close(self) -> None:
+        self.connection.close()
